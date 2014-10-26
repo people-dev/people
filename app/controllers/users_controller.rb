@@ -21,9 +21,24 @@ class UsersController < ApplicationController
         render plain: "Indexing disabled"
     end
 
+    def edit
+        @user = User.find(params[:id])
+    end
+
+    def update
+        @user = User.find(params[:id])
+
+        if @user.update(article_params)
+            redirect_to @user
+        else
+            render 'edit'
+        end
+    end
+ 
     private
+
         def article_params
-            params.require(:user).permit(:label, :name, :surname)
+            params.require(:user).permit(:label, :name, :surname, :age, :major, :gender)
         end
 end
 
