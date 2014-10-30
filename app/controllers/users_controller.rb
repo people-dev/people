@@ -38,7 +38,7 @@ class UsersController < ApplicationController
     private
 
         def article_params
-            params.require(:user).permit(:label, :name, :surname, :age, :major, :gender)
+            params.require(:user).permit(:label, :name, :surname, :age, :major, :gender, :password, :password_confirmation)
         end
 end
 
