@@ -33,10 +33,10 @@ class UsersController < ApplicationController
             render 'edit'
         end
     end
- 
+
     private
         def user_create_params
-            params.require(:user, :password, :password_confirmation, :name).permit(:label, :name, :surname, :age, :major, :gender, :password, :password_confirmation)
+            params.require(:user).permit(:label, :name, :surname, :password, :password_confirmation)
         end
 
         def user_edit_params
