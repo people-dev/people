@@ -10,10 +10,18 @@
  * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
  * file per style scope.
  *
- *= require_tree .
  *= require_self
  */
+
+@import "bourbon";
+@import "welcome";
+
+$default_font: Open Sans, sans-serif;
+
+@include font-face("Open Sans", "Open_Sans/OpenSans-Regular", normal, $asset-pipeline: true);
+
 .container {
     max-width: 1400px;
     margin: 0 auto;
+    font: 100% $default_font;
 }
