@@ -4,7 +4,7 @@
     <h2><%= pluralize(@user.errors.count, "error") %> prohibited
       this user from being edited:</h2>
     <ul>
-    <% @users.errors.full_messages.each do |msg| %>
+    <% @user.errors.full_messages.each do |msg| %>
       <li><%= msg %></li>
     <% end %>
     </ul>
@@ -24,7 +24,7 @@
     <%= f.label :surname %><br>
     <%= f.text_field :surname %>
   </p>
-  
+
   <p>
       <%= f.label :age %><br>
       <%= f.text_field :age%>
@@ -43,7 +43,7 @@
       <%= f.radio_button :gender, "female" %>
   </p>
 
- 
+
    <p>
     <%= f.submit %>
   </p>
