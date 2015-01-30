@@ -18,7 +18,7 @@
 
 $default_font: Open Sans, sans-serif;
 
-@include font-face("Open Sans", "Open_Sans/OpenSans-Regular", normal, $asset-pipeline: true);
+@include font-face("Open Sans", "Open_Sans/OpenSans-Regular", normal, $asset-pipeline: true, $file-formats: ttf);
 
 .container {
     max-width: 1400px;
