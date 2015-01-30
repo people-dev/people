@@ -5,6 +5,10 @@ class UserTest < ActiveSupport::TestCase
         @user = User.new(label: "12musterm", password: "foobar", password_confirmation: "foobar")
     end
 
+    test "should be valid by default" do
+        assert @user.valid?
+    end
+
     test "label should have a max length of 8" do
         @user.label = "12mustermann"
         assert_not @user.valid?
@@ -12,6 +16,11 @@ class UserTest < ActiveSupport::TestCase
         assert @user.valid?
         @user.label = "12musterm"
         assert @user.valid?
+    end
+
+    test "user should have a label" do
+        @user.label = nil
+        assert_not @user.valid?
     end
 
     test "password should have a minimum length" do
