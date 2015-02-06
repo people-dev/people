@@ -31,6 +31,8 @@ class UserTest < ActiveSupport::TestCase
 
     test "labels should be unique" do
         duplicate_user = @user.dup
+        @user.save
+        assert_not duplicate_user.valid?
         duplicate_user.label = @user.label.upcase
         @user.save
         assert_not duplicate_user.valid?
