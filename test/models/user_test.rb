@@ -29,6 +29,11 @@ class UserTest < ActiveSupport::TestCase
         assert_not @user.valid?
     end
 
+    test "wrong password confirmation should invalidate user model" do
+        @user.password_confirmation = "foobaz"
+        assert_not @user.valid?
+    end
+
     test "labels should be unique" do
         duplicate_user = @user.dup
         @user.save
