@@ -24,7 +24,7 @@ ActiveRecord::Schema.define(version: 20141028003257) do
     t.datetime "updated_at"
     t.integer  "age"
     t.string   "major"
-    t.string   "gender",          limit: nil
+    t.boolean  "gender"
     t.string   "password_digest"
   end
 
