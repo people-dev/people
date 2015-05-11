@@ -1,4 +1,0 @@
-people
-======
-
-Get a profile
