@@ -1,9 +1,9 @@
 from flask import Flask
-
-SECRET_KEY = "foobar"
+from flask.ext.sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
-app.config.from_object(__name__)
+app.config.from_pyfile("../config.py")
 
+db = SQLAlchemy(app)
 
 import people.views

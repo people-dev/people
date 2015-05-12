@@ -14,7 +14,6 @@ def register():
 	form = RegisterForm()
 	return render_template('register.html', form=form)
 
-
 class RegisterForm(Form):
 	"""docstring for RegisterForm"""
 	firstName = StringField('First Name', validators=[DataRequired()])
