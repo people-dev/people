@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% block title %}Welcome{% endblock %}
+{% block body %}
+<div class="container">
+    <h1>People.</h1>
+    <small>you are close to getting a profile</a></small>
+    <form method="POST" action="#">
+        {{ form.csrf_token }}
+        {{ form.firstName.label }} {{ form.firstName(size=20) }}
+        {{ form.lastName.label }} {{ form.lastName(size=20) }}
+        {{ form.password.label }} {{ form.password() }}
+        <input type="submit" value="Go">    
+    </form>
+</div>
+{% endblock %}
