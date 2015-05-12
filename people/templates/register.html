@@ -21,10 +21,21 @@
     </div>
     <form method="POST" action="#" class="ui form">
         {{ form.csrf_token }}
-        {{ form.firstName.label }} {{ form.firstName(size=20) }}
-        {{ form.lastName.label }} {{ form.lastName(size=20) }}
-        {{ form.password.label }} {{ form.password() }}
-        <input type="submit" value="Go">    
+        <div class="field">
+            {{ form.firstName.label }} {{ form.firstName(size=20) }}
+        </div>
+        <div class="field">
+            {{ form.lastName.label }} {{ form.lastName(size=20) }}
+        </div>
+        <div class="two fields">
+            <div class="required field">
+                {{ form.username.label }} {{ form.username }}
+            </div>
+            <div class="required field">
+                {{ form.password.label }} {{ form.password() }}
+            </div>
+        </div>
+        <input class="ui submit button right floated" type="submit" value="Register">    
     </form>
 </div>
 {% endblock %}
