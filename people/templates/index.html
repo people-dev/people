@@ -1,8 +1,23 @@
 {% extends "layout.html" %}
 {% block title %}Welcome{% endblock %}
 {% block body %}
-<div class="container">
+<div class="sixteen wide column">
 	<h1>People.</h1>
-	<small>get a <a href="{{url_for('register')}}"> profile </a></small>
+	<div class="ui secondary pointing menu">
+	  <a class="active item" href="{{ url_for('index') }}">
+	    <i class="home icon"></i> Home
+	  </a>
+	  <a class="item" href="{{ url_for('register') }}">
+	    <i class="user icon"></i> Register
+	  </a>
+	  <div class="right menu">
+	    <div class="item">
+	      <div class="ui transparent icon input">
+	        <input type="text" placeholder="Search...">
+	        <i class="search link icon"></i>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 </div>
 {% endblock %}
