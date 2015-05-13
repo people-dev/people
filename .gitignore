@@ -20,3 +20,6 @@
 *.pyc
 *__pycache__*
 venv
+
+# Config file
+/config.py
