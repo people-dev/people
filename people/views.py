@@ -19,6 +19,6 @@ class RegisterForm(Form):
 	"""docstring for RegisterForm"""
 	firstName = StringField('First Name', validators=[DataRequired()])
 	lastName = StringField('Last Name', validators=[DataRequired()])
-	username = StringField('Username', validators=[DataRequired()])
+	username = StringField('Label', validators=[DataRequired()])
 	password = PasswordField('Password', validators=[DataRequired()])
 		
