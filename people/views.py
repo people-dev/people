@@ -5,6 +5,7 @@ from wtforms import StringField, PasswordField
 from wtforms.validators import DataRequired
 from people.models.user import User
 from flask.ext.login import login_user
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 @app.route('/')
@@ -15,7 +16,7 @@ def index():
 def register():
 	form = RegisterForm()
 	if request.method == 'POST' and form.validate():
-		user = User(form.username.data, form.firstName.data, form.lastName.data, form.password.data)
+		user = User(form.username.data, form.firstName.data, form.lastName.data, generate_password_hash(form.password.data))
 		db.session.add(user)
 		db.session.commit()
 		return render_template('index.html')
