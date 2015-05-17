@@ -41,6 +41,9 @@
               <i class="search link icon"></i>
             </div>
           </div>
+          <a class="{% if activePage == 'login' %} active {% endif %} item" href="{{ url_for('login') }}">
+           <i class="user icon"></i> Login 
+          </a>
         </div>
       </div>
     {% block body %}

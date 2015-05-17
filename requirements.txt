@@ -1,4 +1,4 @@
 Flask
 Flask-WTF
 Flask-SQLAlchemy
-Flask-Security
+Flask-Login

@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+{% set activePage = "login" %}
+{% block title %}Welcome{% endblock %}
+{% block body %}
+    <form method="POST" action="#" class="ui form">
+        {{ form.csrf_token }}
+        <div class="ui required field">
+            {{ form.username.label }} {{ form.username(size=20) }}
+        </div>
+        <div class="ui required field">
+            {{ form.password.label }} {{ form.password(size=20) }}
+        </div>
+        <input class="ui primary submit button fluid" type="submit" value="login">    
+    </form>
+{% endblock %}

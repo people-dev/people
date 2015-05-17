@@ -1,4 +1,4 @@
-from people import db, roles_users
+from people import db 
 from sqlalchemy.orm import validates
 import re
 
@@ -9,9 +9,7 @@ class User(db.Model):
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(255))
     active = db.Column(db.Boolean())
-    confirmed_at = db.Column(db.DateTime())
-    roles = db.relationship('Role', secondary=roles_users,
-                            backref=db.backref('users', lazy='dynamic'))
+    confirmed_at = db.Column(db.DateTime(), nullable = True)
 
 
 
@@ -22,7 +20,7 @@ class User(db.Model):
         self.email = id + "@informatik.uni-hamburg.de"
         self.password = password
         self.active = False
-        self.confirmed_at = ""
+        self.confirmed_at = None 
 
     @validates("id")
     def validate_id(self, key, id):
