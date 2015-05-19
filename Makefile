@@ -8,4 +8,5 @@ setup:
 
 venv-setup:
 	./scripts/venv-setup.sh
-
+init-db:
+	./scripts/init-db.sh
