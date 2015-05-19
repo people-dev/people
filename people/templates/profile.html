@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
 {% set activePage = "profile" %}
-{% block title %}Welcome{% endblock %}
+{% block title %}Profile of {{user.firstName}} {{user.lastName}}{% endblock %}
 {% block body %}
+<img class="ui medium bordered image" src="{{url_for('static', filename= profile.image)}}">
 {{user.firstName}} {{user.lastName}}
 {% endblock %}
