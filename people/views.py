@@ -4,6 +4,7 @@ from flask_wtf import Form
 from wtforms import StringField, PasswordField
 from wtforms.validators import DataRequired
 from people.models.user import User
+from people.models.profile import Profile
 from flask.ext.login import login_user, login_required, logout_user
 from werkzeug.security import generate_password_hash
 
@@ -35,24 +36,40 @@ def login():
     form = LoginForm()
     if form.validate_on_submit():
         user = User.query.get(form.username.data)
+        if user is None:
+            flash('unknown User')
+            abort(redirect('login'))
         if user.check_password(form.password.data):
-            login = login_user(user)
-            print(login)
-
+            login_user(user)
             flash('Logged in successfully.')
 
         # next = request.args.get('next')
         # if not next_is_valid(next):
         #     return abort(400)
-
             return redirect(url_for('index'))
+        else:
+            flash('Username or password wrong')
     return render_template('login.html', form=form)
 
-@app.route("/logout")
+@app.route('/logout')
 @login_required
 def logout():
     logout_user()
     return redirect(url_for('login'))
+
+@app.route('/<username>')
+@login_required
+def profile(username):
+    profile = Profile.query.get(username)
+    user = User.query.get(username)
+    if profile is None:
+        if user is None:
+            abort(404)
+        else:
+            profile = Profile(username,"","")
+            db.session.add(profile)
+            db.session.commit()
+    return render_template('profile.html', profile=profile, user=user)
 
 
 class RegisterForm(Form):

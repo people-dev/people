@@ -21,14 +21,22 @@
     <div class="ui page grid">
     <div class="sixteen wide column">
     <h1>People</h1>
+    {% if not current_user.is_authenticated() %}
     <p>Get a profile.</p>
+    {% endif %}
       <div class="ui secondary pointing menu">
         <a class="{% if activePage == 'index'  %} active {% endif %} item" href="{{ url_for('index') }}">
           <i class="home icon"></i> Home
         </a>
+        {% if not current_user.is_authenticated() %}
         <a class="{% if activePage == 'register' %} active {% endif %} item" href="{{ url_for('register') }}">
           <i class="user icon"></i> Register
         </a>
+        {% else %}
+        <a class="{% if activePage == 'userpage' %} active {% endif %} item" href="{{ url_for('index') }}">
+          <i class="user icon"></i> {{current_user.firstName}}'s Profile
+        </a>
+        {% endif %}
         {% if activePage == 'makers' %}        
         <a class="active item" href="{{ url_for('makers') }}">
           <i class="user icon"></i> Makers

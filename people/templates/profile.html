@@ -1,0 +1,6 @@
+{% extends "layout.html" %}
+{% set activePage = "profile" %}
+{% block title %}Welcome{% endblock %}
+{% block body %}
+{{user.firstName}} {{user.lastName}}
+{% endblock %}
