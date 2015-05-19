@@ -2,6 +2,10 @@
 {% set activePage = "profile" %}
 {% block title %}Profile of {{user.firstName}} {{user.lastName}}{% endblock %}
 {% block body %}
-<img class="ui medium bordered image" src="{{url_for('static', filename= profile.image)}}">
+{% if profile.image %}
+<img class="ui medium bordered image" src="{{url_for('static', filename = 'images/' + profile.image)}}">
+{% else %}
+<img class="ui medium bordered image" src="{{url_for('static', filename = 'images/people_p.png')}}">
+{% endif %}
 {{user.firstName}} {{user.lastName}}
 {% endblock %}

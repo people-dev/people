@@ -66,7 +66,7 @@ def profile(username):
         if user is None:
             abort(404)
         else:
-            profile = Profile(username,"","")
+            profile = Profile(username)
             db.session.add(profile)
             db.session.commit()
     return render_template('profile.html', profile=profile, user=user)

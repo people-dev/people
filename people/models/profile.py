@@ -9,7 +9,7 @@ class Profile(db.Model):
 
 
 
-    def __init__(self, userid, aboutText, gender, image):
+    def __init__(self, userid, aboutText="", gender="", image=""):
         self.userid = userid
         self.aboutText = aboutText
         self.gender = gender
