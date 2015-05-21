@@ -1,5 +1,5 @@
 from people import db, app 
-from people.models.user import User
+from people.models import User
 from flask.ext.login import LoginManager
 
 

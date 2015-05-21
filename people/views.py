@@ -3,8 +3,8 @@ from flask import render_template, request, redirect, url_for, abort, flash
 from flask_wtf import Form
 from wtforms import StringField, PasswordField
 from wtforms.validators import DataRequired
-from people.models.user import User
-from people.models.profile import Profile
+from people.models import User
+from people.models import Profile
 from flask.ext.login import login_user, login_required, logout_user
 from werkzeug.security import generate_password_hash
 
@@ -18,9 +18,15 @@ def register():
     form = RegisterForm()
     if request.method == 'POST' and form.validate():
         user = User(form.username.data, form.firstName.data, form.lastName.data, generate_password_hash(form.password.data))
+        if user.id is False:
+            flash('Username not valid', 'error')
+            abort(redirect('register'))
+        profile = Profile(form.username.data)
         db.session.add(user)
+        db.session.add(profile)
         db.session.commit()
-        return render_template('index.html')
+        flash("You've successfully registered. Now login with your credentials.", 'success')
+        return render_template('login.html')
     else:
         return render_template('register.html', form=form)
 
@@ -37,18 +43,18 @@ def login():
     if form.validate_on_submit():
         user = User.query.get(form.username.data)
         if user is None:
-            flash('unknown User')
+            flash('unknown User', 'error')
             abort(redirect('login'))
         if user.check_password(form.password.data):
             login_user(user)
-            flash('Logged in successfully.')
+            flash('Logged in successfully.', 'success')
 
         # next = request.args.get('next')
         # if not next_is_valid(next):
         #     return abort(400)
             return redirect(url_for('index'))
         else:
-            flash('Username or password wrong')
+            flash('Username or password wrong', 'error')
     return render_template('login.html', form=form)
 
 @app.route('/logout')
@@ -62,13 +68,8 @@ def logout():
 def profile(username):
     profile = Profile.query.get(username)
     user = User.query.get(username)
-    if profile is None:
-        if user is None:
-            abort(404)
-        else:
-            profile = Profile(username)
-            db.session.add(profile)
-            db.session.commit()
+    if user is None:
+        abort(404)
     return render_template('profile.html', profile=profile, user=user)
 
 
