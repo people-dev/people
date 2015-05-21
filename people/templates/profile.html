@@ -2,10 +2,22 @@
 {% set activePage = "profile" %}
 {% block title %}Profile of {{user.firstName}} {{user.lastName}}{% endblock %}
 {% block body %}
-{% if profile.image %}
-<img class="ui medium bordered image" src="{{url_for('static', filename = 'images/' + profile.image)}}">
-{% else %}
-<img class="ui medium bordered image" src="{{url_for('static', filename = 'images/people_p.png')}}">
-{% endif %}
-{{user.firstName}} {{user.lastName}}
+
+<div class="ui grid">
+    <div class="two column row">
+      <div class="column">
+        {% if profile.image %}
+        <img class="ui medium bordered image" src="{{url_for('static', filename = 'images/' + profile.image)}}">
+        {% else %}
+        <img class="ui medium bordered image" src="{{url_for('static', filename = 'images/people_p.png')}}">
+        {% endif %}
+        
+    </div>
+    <div class="column">
+    Name: {{user.firstName}} {{user.lastName}} <br>
+    Gender: {{user.gender}} <br>
+    About {{user.firstName}}: {{user.about}} <br>
+    </div>
+</div>
+</div>
 {% endblock %}
