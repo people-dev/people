@@ -65,31 +65,16 @@
           {% endif %}
         </div>
       </div>
-    {% with errors = get_flashed_messages(category_filter=["error"]) %}
-    {% if errors %}
-        <div class="ui error message">
-            <i class="close icon"></i>
-            <div class="header">
-                There was some errors with your submission
+    {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="ui {{category}} message">
+                <i class="close icon"></i>
+                <div class="header">
+                    {{message}}
+                </div>
             </div>
-            <ul class="list">
-            {% for message in errors %}
-                <li>{{ message }}</li>
-            {% endfor %}
-            </ul>
-        </div>
-    {% endif %}
-    {% endwith %}
-    {% with notifications = get_flashed_messages(category_filter=["success"]) %}
-    {% if notifications %}
-        <div class="ui success message">
-            <i class="close icon"></i>
-            <div class="header">
-            {% for message in notifications%}
-                {{message}}
-            {% endfor %}
-            </div>
-        </div>
+        {% endfor %}
     {% endif %}
     {% endwith %}
     {% block body %}
