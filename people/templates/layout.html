@@ -29,6 +29,11 @@
         <a class="{% if activePage == 'register' %} active {% endif %} item" href="{{ url_for('register') }}">
           <i class="user icon"></i> Register
         </a>
+        {% else %}
+        <a class="{% if activePage == 'userpage' %} active {% endif %} item" href="{{ url_for('profile', username=current_user.id) }}">
+          <i class="user icon"></i> {{current_user.firstName}}'s Profile
+        </a>
+        {% endif %}
         {% if activePage == 'makers' %}        
         <a class="active item" href="{{ url_for('makers') }}">
           <i class="user icon"></i> Makers
@@ -50,12 +55,40 @@
             {{ current_user.firstName }} {{ current_user.lastName }}
             <i class="dropdown icon"></i>
             <div class="menu">
+              <a class="item" href="{{ url_for('profile', username=current_user.id) }}">My Profile</a>
               <a class="item" href="{{ url_for('logout') }}">Logout</a>
             </div>
           </div>
           {% endif %}
         </div>
       </div>
+    {% with errors = get_flashed_messages(category_filter=["error"]) %}
+    {% if errors %}
+        <div class="ui error message">
+            <i class="close icon"></i>
+            <div class="header">
+                There was some errors with your submission
+            </div>
+            <ul class="list">
+            {% for message in errors %}
+                <li>{{ message }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+    {% endwith %}
+    {% with notifications = get_flashed_messages(category_filter=["success"]) %}
+    {% if notifications %}
+        <div class="ui success message">
+            <i class="close icon"></i>
+            <div class="header">
+            {% for message in notifications%}
+                {{message}}
+            {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+    {% endwith %}
     {% block body %}
     {% endblock %}
     </div>
