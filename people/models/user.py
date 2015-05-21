@@ -26,8 +26,13 @@ class User(db.Model, UserMixin):
 
     @validates("id")
     def validate_id(self, key, id):
-        assert re.match("^[0-9]{2}[a-z]{1,7}$", id)
-        return id
+        try:
+            assert re.match("^[0-9]{2}[a-z]{1,7}$", id)
+        except Exception as inst:
+            print(inst)
+            return False;
+        else:
+            return id
 
     def is_active(self):
         return self.active
