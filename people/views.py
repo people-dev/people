@@ -7,6 +7,8 @@ from people.models import User
 from people.models import Profile
 from flask.ext.login import login_user, login_required, logout_user
 from werkzeug.security import generate_password_hash
+import time
+import datetime
 
 
 @app.route('/')
@@ -17,7 +19,8 @@ def index():
 def register():
     form = RegisterForm()
     if request.method == 'POST' and form.validate():
-        user = User(form.username.data, form.firstName.data, form.lastName.data, generate_password_hash(form.password.data))
+        timeStamp = time.time()
+        user = User(form.username.data, form.firstName.data, form.lastName.data, generate_password_hash(form.password.data), timeStamp)
         if user.id is False:
             flash('Username not valid', 'error')
             abort(redirect('register'))
@@ -43,7 +46,7 @@ def login():
     if form.validate_on_submit():
         user = User.query.get(form.username.data)
         if user is None:
-            flash('unknown User', 'error')
+            flash('Unknown User', 'error')
             abort(redirect('login'))
         if user.check_password(form.password.data):
             login_user(user)
@@ -70,6 +73,8 @@ def profile(username):
     user = User.query.get(username)
     if user is None:
         abort(404)
+
+    user.created_at = datetime.datetime.fromtimestamp(user.created_at).strftime('%Y-%m-%d')
     return render_template('profile.html', profile=profile, user=user)
 
 

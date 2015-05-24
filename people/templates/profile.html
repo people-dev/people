@@ -21,7 +21,7 @@
           </div>
           <div class="description">
           <strong>About {{user.firstName}}:</strong>
-          {{user.about}}
+          {{profile.about}}
           </div>
         </div>
         <div class="extra content">
@@ -35,9 +35,10 @@
         
     </div>
     <div class="column">
-    <h2>Basic Information</h2>
+    <h2>Account Information</h2>
     Name: {{user.firstName}} {{user.lastName}} <br>
-    Gender: {{user.gender}} <br>
+    Signed up at: {{user.created_at}} <br>
+    Last Update: {{profile.updated_at}}
     </div>
 </div>
 <div class="two column row">
@@ -47,9 +48,18 @@
     {% endif %}
     </div>
     <div class="column">
-        <h2>Personal Information</h2>
-        Major: <br>
-        Something else: <br>
+        <h2>Basic Information</h2>
+        Gender: {{profile.gender}}<br>
+        Birthday: {{profile.birthday}} <br>
+    </div>
+</div>
+<div class="two column row">
+    <div class="column">
+    </div>
+    <div class="column">
+        <h2>Education</h2>
+        Mayor: {{profile.mayor}}<br>
+        Semester: {{profile.semester}} <br>
     </div>
 </div>
 </div>

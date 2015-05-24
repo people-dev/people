@@ -11,11 +11,12 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(255))
     active = db.Column(db.Boolean())
-    confirmed_at = db.Column(db.DateTime(), nullable = True)
+    confirmed_at = db.Column(db.Integer, nullable = True)
+    created_at = db.Column(db.Integer)
 
 
 
-    def __init__(self, id, firstName, lastName, password):
+    def __init__(self, id, firstName, lastName, password, created_at):
         self.id = id
         self.firstName = firstName
         self.lastName = lastName
@@ -23,6 +24,7 @@ class User(db.Model, UserMixin):
         self.password = password
         self.active = True
         self.confirmed_at = None 
+        self.created_at = created_at
 
     @validates("id")
     def validate_id(self, key, id):
