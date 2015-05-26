@@ -1,0 +1,25 @@
+{% extends "layout.html" %}
+{% set activePage = "edit" %}
+{% block title %}Welcome{% endblock %}
+{% block body %}
+<div class="ui card">
+  <div class="image">
+    <img src="{{ url_for('static', filename='images/people_p.png') }}">
+  </div>
+  <div class="content">
+    <a class="header">People Project</a>
+    <div class="meta">
+      <span class="date">Created in 2014</span>
+    </div>
+    <div class="description">
+    People is for everyone. Share who you are with who doesn't know. Get a profile.
+    </div>
+  </div>
+  <div class="extra content">
+    <a href="{{ url_for('makers') }}">
+      <i class="user icon"></i>
+      3 Contributers
+    </a>
+  </div>
+</div>
+{% endblock %}

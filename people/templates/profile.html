@@ -32,7 +32,7 @@
     </div>
 </div>
 {% if user.id == current_user.id %}
-<a href="{{url_for('index')}}">Edit profile</a>
+<a href="{{url_for('editProfile', username=current_user.id)}}">Edit profile</a>
 {% endif %}
 
 

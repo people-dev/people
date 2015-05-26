@@ -5,7 +5,7 @@ from wtforms import StringField, PasswordField
 from wtforms.validators import DataRequired
 from people.models import User
 from people.models import Profile
-from flask.ext.login import login_user, login_required, logout_user
+from flask.ext.login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash
 import time
 import datetime
@@ -71,12 +71,24 @@ def logout():
 def profile(username):
     profile = Profile.query.get(username)
     user = User.query.get(username)
-    if user is None:
+    if user is None or profile is None:
         abort(404)
 
     user.created_at = datetime.datetime.fromtimestamp(user.created_at).strftime('%Y-%m-%d')
     return render_template('profile.html', profile=profile, user=user)
 
+
+@app.route('/<username>/edit')
+@login_required
+def editProfile(username):
+    if current_user.id == username:
+        profile = Profile.query.get(username)
+        user = User.query.get(username)
+        if user is None or profile is None:
+            abort(404)
+        return render_template('editProfile.html', profile=profile, user=user)
+    else:
+        abort(403)
 
 class RegisterForm(Form):
     """docstring for RegisterForm"""
