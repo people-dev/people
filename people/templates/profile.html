@@ -6,61 +6,57 @@
 <div class="ui grid">
     <div class="two column row">
       <div class="column">
-      <div class="ui card">
-        <div class="image">
-          {% if profile.image %}
-        <img class="ui medium bordered image" src="{{url_for('static', filename = 'images/' + profile.image)}}">
-        {% else %}
-        <img class="ui medium bordered image" src="{{url_for('static', filename = 'images/people_p.png')}}">
-        {% endif %}
-        </div>
-        <div class="content">
-          <a class="header">{{user.firstName}} {{user.lastName}}</a>
-          <div class="meta">
-            <span class="date"></span>
+          <div class="ui card">
+            <div class="image">
+              {% if profile.image %}
+              <img class="ui medium bordered image" src="{{url_for('static', filename = 'images/' + profile.image)}}">
+              {% else %}
+              <img class="ui medium bordered image" src="{{url_for('static', filename = 'images/people_p.png')}}">
+              {% endif %}
           </div>
-          <div class="description">
-          <strong>About {{user.firstName}}:</strong>
-          {{profile.about}}
+          <div class="content">
+              <a class="header">{{user.firstName}} {{user.lastName}}</a>
+              <div class="meta">
+                <span class="date"></span>
+            </div>
+            <div class="description">
+              <strong>About {{user.firstName}}:</strong>
+              {{profile.about}}
           </div>
-        </div>
-        <div class="extra content">
+      </div>
+      <div class="extra content">
           <a href="{{ url_for('index') }}">
             <i class="user icon"></i>
-           friends 
-          </a>
-        </div>
-      </div>
-        
-        
+            friends 
+        </a>
     </div>
-    <div class="column">
+</div>
+{% if user.id == current_user.id %}
+<a href="{{url_for('index')}}">Edit profile</a>
+{% endif %}
+
+
+</div>
+<div class="column">
     <h2>Account Information</h2>
     Name: {{user.firstName}} {{user.lastName}} <br>
     Signed up at: {{user.created_at}} <br>
     Last Update: {{profile.updated_at}}
-    </div>
+    <h2>Basic Information</h2>
+    Gender: {{profile.gender}}<br>
+    Birthday: {{profile.birthday}} <br>
+    <h2>Education</h2>
+    Mayor: {{profile.mayor}}<br>
+    Semester: {{profile.semester}} <br>
+    <h2>Contact Information</h2>
+    Email: {{profile.email}}<br>
+    Phone: {{profile.phone}} <br>
+    Mobile: {{profile.mobile}} <br>
+    Jabber: {{profile.jabber}} <br>
+    <h2>Education</h2>
+    Mayor: {{profile.mayor}}<br>
+    Semester: {{profile.semester}} <br>
 </div>
-<div class="two column row">
-    <div class="column">
-    {% if user.id == current_user.id %}
-        <a href="{{url_for('index')}}">Edit profile</a>
-    {% endif %}
-    </div>
-    <div class="column">
-        <h2>Basic Information</h2>
-        Gender: {{profile.gender}}<br>
-        Birthday: {{profile.birthday}} <br>
-    </div>
-</div>
-<div class="two column row">
-    <div class="column">
-    </div>
-    <div class="column">
-        <h2>Education</h2>
-        Mayor: {{profile.mayor}}<br>
-        Semester: {{profile.semester}} <br>
-    </div>
 </div>
 </div>
 {% endblock %}
