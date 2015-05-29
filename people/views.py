@@ -87,7 +87,8 @@ def profile(username):
         abort(404)
 
     user.created_at = datetime.datetime.fromtimestamp(user.created_at).strftime('%Y-%m-%d')
-    profile.updated_at = datetime.datetime.fromtimestamp(profile.updated_at).strftime('%Y-%m-%d %H:%M')
+    if profile.updated_at is not None:
+        profile.updated_at = datetime.datetime.fromtimestamp(profile.updated_at).strftime('%Y-%m-%d %H:%M')
     return render_template('profile.html', profile=profile, user=user)
 
 
