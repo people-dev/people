@@ -2,24 +2,76 @@
 {% set activePage = "edit" %}
 {% block title %}Welcome{% endblock %}
 {% block body %}
-<div class="ui card">
-  <div class="image">
-    <img src="{{ url_for('static', filename='images/people_p.png') }}">
-  </div>
-  <div class="content">
-    <a class="header">People Project</a>
-    <div class="meta">
-      <span class="date">Created in 2014</span>
-    </div>
-    <div class="description">
-    People is for everyone. Share who you are with who doesn't know. Get a profile.
-    </div>
-  </div>
-  <div class="extra content">
-    <a href="{{ url_for('makers') }}">
-      <i class="user icon"></i>
-      3 Contributers
-    </a>
-  </div>
+<div class="ui grid">
+<div class="eight wide column" id="context">
+  <form method="POST" action="#" class="ui form" enctype="multipart/form-data">
+        {{ form.csrf_token }}
+        <h2>Profile Picture</h2>
+        <div class="ui divider"></div>
+        <div class="ui field">
+            {{ form.picture.label }} {{ form.picture() }}
+        </div>
+        <h2>Account Information</h2>
+        <div class="ui divider"></div>
+        <div class="ui field">
+            {{ form.name.label }} {{ form.name(value=user.firstName+" "+user.lastName) }}
+        </div>
+        <h2>Basic Information</h2>
+        <div class="ui divider"></div>
+        <div class="ui field">
+            {{ form.gender.label }} {{ form.gender(width='100%', size=20, value=profile.gender) }}
+        </div>
+        <div class="ui field">
+            {{form.birthday.label}} {{ form.birthday(class='datepicker', value=profile.birthday) }}
+        </div>
+        <h2>Education</h2>
+        <div class="ui divider"></div>
+        <div class="ui field">
+            {{ form.major.label }} {{ form.major() }}
+        </div>
+        <div class="ui field">
+            {{ form.semester.label }} {{ form.semester(size=20, value=profile.semester) }}
+        </div>
+        <h2>Contact Information</h2>
+        <div class="ui divider"></div>
+        <div class="ui field">
+            {{ form.phone.label }} {{ form.phone(size=20, value=profile.phone) }}
+        </div>
+        <div class="ui field">
+            {{ form.mobile.label }} {{ form.mobile(size=20, value=profile.mobile) }}
+        </div>
+        <div class="ui field">
+            {{ form.jabber.label }} {{ form.jabber(size=20, value=profile.jabber) }}
+        </div>
+        <h2>Additional Information</h2>
+        <div class="ui divider"></div>
+        <div class="ui field">
+            {{ form.about.label }} {{ form.about() }}
+        </div>
+        <div class="ui buttons">
+        <input type="submit" class="ui positive button" value="Save">
+          <a href="{{url_for('profile', username=current_user.id)}}" class="ui negative button">Cancel</a>
+        </div>
+    </form>
+ </div> 
+ <div class="eight wide column">
+ <div class="ui sticky">
+    <!-- Any arbitrary content !-->
+  <div class="ui fluid card">
+        <div class="content">
+            <div class="header">Information</div>
+            <div class="meta">Privacy</div>
+            <div class="description">
+              <p>Remember that anything you type here is per default only visible to your friends. If you want to change these settings look <a href="#">here</a></p>
+              <p></p>
+            </div>
+          </div>
+          <div class="extra content">
+            <i class="check icon"></i>
+            more awnsers in our <a href="#">FAQ</a>
+          </div>
+      </div>
+ </div>
 </div>
+</div> 
 {% endblock %}

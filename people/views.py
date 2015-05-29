@@ -1,12 +1,17 @@
 from people import app, db
 from flask import render_template, request, redirect, url_for, abort, flash
+from flask.ext.uploads import UploadSet, IMAGES
 from flask_wtf import Form
-from wtforms import StringField, PasswordField
+from flask_wtf.file import FileField, FileAllowed
+from wtforms import StringField, PasswordField, SelectField, DecimalField 
 from wtforms.validators import DataRequired
+from wtforms.fields.html5 import DateField, IntegerRangeField
+from wtforms.widgets import TextArea
 from people.models import User
 from people.models import Profile
 from flask.ext.login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash
+from werkzeug import secure_filename
 import time
 import datetime
 
@@ -82,18 +87,41 @@ def profile(username):
         abort(404)
 
     user.created_at = datetime.datetime.fromtimestamp(user.created_at).strftime('%Y-%m-%d')
+    profile.updated_at = datetime.datetime.fromtimestamp(profile.updated_at).strftime('%Y-%m-%d %H:%M')
     return render_template('profile.html', profile=profile, user=user)
 
 
-@app.route('/<username>/edit')
+@app.route('/<username>/edit', methods=['GET', 'POST'])
 @login_required
 def editProfile(username):
     if current_user.id == username:
+        form = EditProfileForm()
+        if request.method == 'POST':
+        # if form.validate_on_submit():
+            timeStamp = time.time()
+            profile = Profile.query.get(username)
+            profile.name=form.name.data
+            profile.gender=form.gender.data
+            profile.major=form.major.data
+            profile.semester=form.semester.data
+            profile.phone=form.phone.data
+            profile.mobile=form.mobile.data
+            profile.jabber=form.jabber.data
+            profile.updated_at = timeStamp
+            profile.about = form.about.data
+            if form.picture.data.filename is not '':
+                filename = secure_filename(form.picture.data.filename)
+                form.picture.data.save('people'+url_for('static',filename='images/'+filename))
+                profile.image = filename
+            db.session.commit()
+            return redirect(url_for('profile', username=current_user.id))
         profile = Profile.query.get(username)
         user = User.query.get(username)
+        form.about.data = profile.about
         if user is None or profile is None:
             abort(404)
-        return render_template('editProfile.html', profile=profile, user=user)
+        filename = None
+        return render_template('editProfile.html', profile=profile, user=user, form=form, filename=filename)
     else:
         abort(403)
 
@@ -108,3 +136,19 @@ class RegisterForm(Form):
 class LoginForm(Form):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
+
+class EditProfileForm(Form):
+    name = StringField('Name')
+    gender = StringField('Gender')
+    birthday = DateField('Birthday', format='%d-%m-%Y')
+    selectMajors = [('Bsc. Inf', 'Bsc. Inf'), ('Bsc. CIS', 'Bsc. CIS'), ('Bsc. SSE', 'Bsc. SSE'), ('Bsc. MCI', 'Bsc. MCI'), ('Bsc. WiInf', 'Bsc. WiInf')]
+    major = SelectField('Major', choices = selectMajors)
+    semester = StringField('Semester')
+    phone = StringField('Phone')
+    mobile = StringField('Mobile')
+    jabber = StringField('Jabber')
+    about =  StringField('About you', widget=TextArea())
+    images = UploadSet('images', IMAGES)
+    picture = FileField('Profile Picture', validators=[FileAllowed(images, 'Images only!')])
+
+
