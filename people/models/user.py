@@ -11,7 +11,7 @@ class User(db.Model, UserMixin):
     email = db.Column(db.String(255), unique=True)
     password = db.Column(db.String(255))
     active = db.Column(db.Boolean())
-    confirmed_at = db.Column(db.Integer, nullable = True)
+    confirmed_at = db.Column(db.Integer)
     created_at = db.Column(db.Integer)
 
 
@@ -22,8 +22,8 @@ class User(db.Model, UserMixin):
         self.lastName = lastName
         self.email = id + "@informatik.uni-hamburg.de"
         self.password = password
-        self.active = True
-        self.confirmed_at = None 
+        self.active = False
+        self.confirmed_at = 0
         self.created_at = created_at
 
     @validates("id")

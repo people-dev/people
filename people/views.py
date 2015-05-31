@@ -1,4 +1,4 @@
-from people import app, db, mail
+from people import app, db, mail, timedSerializer
 from flask import render_template, request, redirect, url_for, abort, flash
 from flask.ext.uploads import UploadSet, IMAGES
 from flask_wtf import Form
@@ -43,7 +43,10 @@ def register():
         db.session.commit()
         # msg = Message('People Confirm account', recipients=['3deinert@informatik.uni-hamburg.de'], html='Your account has been successfully created and this is the confirmation mail')
         # mail.send(msg)
-        flash("You've successfully registered. Now login with your credentials.", 'success')
+        print(user.email)
+        token = timedSerializer.dumps(user.email, salt='email-confirm-key')
+        print(url_for('confirm_email', token=token, _external=True))
+        flash("You've successfully registered. Check your emails to confirm your account.", 'success')
         return redirect(url_for('login'))
     else:
         return render_template('register.html', form=form)
@@ -64,8 +67,12 @@ def login():
             flash('Unknown User', 'error')
             abort(redirect('login'))
         if user.check_password(form.password.data):
-            login_user(user)
-            flash('Logged in successfully.', 'success')
+            if user.is_active():
+                login_user(user)
+                flash('Logged in successfully.', 'success')
+            else:
+                flash('User not activated', 'error')
+                return redirect(url_for('login'))
 
         # next = request.args.get('next')
         # if not next_is_valid(next):
@@ -128,6 +135,24 @@ def editProfile(username):
         return render_template('editProfile.html', profile=profile, user=user, form=form, filename=filename)
     else:
         abort(403)
+
+
+@app.route('/confirm/<token>')
+def confirm_email(token):
+    try:
+        email = timedSerializer.loads(token, salt="email-confirm-key", max_age=86400)
+    except:
+        abort(404)
+
+    user = User.query.filter_by(email=email).first_or_404()
+
+    user.confirmed_at = time.time()
+    user.active = True
+
+    db.session.add(user)
+    db.session.commit()
+    flash('Email confirmed successfully', 'success')
+    return redirect(url_for('login'))
 
 class RegisterForm(Form):
     """docstring for RegisterForm"""
