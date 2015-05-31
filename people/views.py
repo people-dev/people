@@ -1,4 +1,4 @@
-from people import app, db
+from people import app, db, mail
 from flask import render_template, request, redirect, url_for, abort, flash
 from flask.ext.uploads import UploadSet, IMAGES
 from flask_wtf import Form
@@ -12,6 +12,7 @@ from people.models import Profile
 from flask.ext.login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash
 from werkzeug import secure_filename
+from flask_mail import Message
 import time
 import datetime
 
@@ -40,6 +41,8 @@ def register():
         db.session.add(user)
         db.session.add(profile)
         db.session.commit()
+        # msg = Message('People Confirm account', recipients=['3deinert@informatik.uni-hamburg.de'], html='Your account has been successfully created and this is the confirmation mail')
+        # mail.send(msg)
         flash("You've successfully registered. Now login with your credentials.", 'success')
         return redirect(url_for('login'))
     else:
@@ -67,7 +70,7 @@ def login():
         # next = request.args.get('next')
         # if not next_is_valid(next):
         #     return abort(400)
-            return redirect(url_for('index'))
+            return redirect(url_for('profile', username=current_user.id))
         else:
             flash('Username or password wrong', 'error')
     return render_template('login.html', form=form)
