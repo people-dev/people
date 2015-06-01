@@ -54,6 +54,7 @@
            <i class="user icon"></i> Login 
           </a>
           {% else %}
+            <a class="detail"><i class="mail icon"></i> {{g.notifications.count()}}</a>
           <div class="ui dropdown item">
             {{ current_user.firstName }} {{ current_user.lastName }}
             <i class="dropdown icon"></i>
@@ -62,6 +63,7 @@
               <a class="item" href="{{ url_for('logout') }}">Logout</a>
             </div>
           </div>
+          
           {% endif %}
         </div>
       </div>

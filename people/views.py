@@ -1,5 +1,5 @@
 from people import app, db, mail, timedSerializer
-from flask import render_template, request, redirect, url_for, abort, flash
+from flask import render_template, request, redirect, url_for, abort, flash, g
 from flask.ext.uploads import UploadSet, IMAGES
 from flask_wtf import Form
 from flask_wtf.file import FileField, FileAllowed
@@ -9,12 +9,18 @@ from wtforms.fields.html5 import DateField, IntegerRangeField
 from wtforms.widgets import TextArea
 from people.models import User
 from people.models import Profile
+from people.models import Notification
 from flask.ext.login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash
 from werkzeug import secure_filename
 from flask_mail import Message
 import time
 import datetime
+
+@app.before_request
+def before_request():
+    if not current_user.is_anonymous():
+        g.notifications = Notification.query.filter_by(user=current_user.id) 
 
 @app.errorhandler(404)
 def pageNotFound(e):
