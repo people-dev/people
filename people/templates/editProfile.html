@@ -48,7 +48,7 @@
         <div class="ui field">
             {{ form.about.label }} {{ form.about() }}
         </div>
-        <div class="ui buttons">
+        <div class="ui buttons right floated">
         <input type="submit" class="ui positive button" value="Save">
           <a href="{{url_for('profile', username=current_user.id)}}" class="ui negative button">Cancel</a>
         </div>
