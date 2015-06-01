@@ -54,7 +54,10 @@
            <i class="user icon"></i> Login 
           </a>
           {% else %}
+          <div class="ui label">
+            Notifications
             <a class="detail"><i class="mail icon"></i> {{g.notifications.count()}}</a>
+          </div>
           <div class="ui dropdown item">
             {{ current_user.firstName }} {{ current_user.lastName }}
             <i class="dropdown icon"></i>
