@@ -23,3 +23,6 @@ venv
 
 # Config file
 /config.py
+
+# Images and stuff
+/people/static/images/*
