@@ -17,7 +17,7 @@ user.confirmed_at = ts
 
 profile = Profile("00admin")
 
-notification = Notification(user.id, "Info", ts, "Test notification")
+notification = Notification(user.id, "Info", ts, "Hello People", "Test notification")
 
 db.session.add(user)
 db.session.add(profile)

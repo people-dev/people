@@ -6,13 +6,15 @@ class Notification(db.Model):
 	user = db.Column(db.Text)
 	notificationType = db.Column(db.Text)
 	notificationTime = db.Column(db.Integer)
+	notificationTitle = db.Column(db.Text)
 	notificationText = db.Column(db.Text)
 	read = db.Column(db.Boolean)
 
-	def __init__(self, user, notificationType, notificationTime, notificationText):
+	def __init__(self, user, notificationType, notificationTime, notificationTitle, notificationText):
 		self.user = user
 		self.notificationType = notificationType
 		self.notificationTime = notificationTime
+		self.notificationTitle = notificationTitle
 		self.notificationText = notificationText
 		self.read = False
 

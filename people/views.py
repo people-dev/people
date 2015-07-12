@@ -21,6 +21,11 @@ import datetime
 def before_request():
     if not current_user.is_anonymous():
         g.notifications = Notification.query.filter_by(user=current_user.id) 
+        for notification in g.notifications:
+            if type(notification.notificationTime) is int:
+                # temp fix for notification time being converted again on POST from e.g. editProfile 
+                notification.notificationTime = datetime.datetime.fromtimestamp(notification.notificationTime).strftime('%Y-%m-%d')
+
 
 @app.errorhandler(404)
 def pageNotFound(e):
@@ -159,6 +164,10 @@ def confirm_email(token):
     db.session.commit()
     flash('Email confirmed successfully', 'success')
     return redirect(url_for('login'))
+
+@app.route('/inbox')
+def inbox():
+    return render_template('notifications.html')
 
 class RegisterForm(Form):
     """docstring for RegisterForm"""
