@@ -33,6 +33,17 @@
             </div>
         {% if user.id == current_user.id %}
             <a href="{{url_for('editProfile', username=current_user.id)}}">Edit profile</a>
+        {% else %}
+            {% set is_sent = [] %}
+            {% for request in pendingFriends %}
+            {% if request.to_user_id == current_user.id or request.from_user_id == current_user.id %}
+                <p>Friendrequest sent</p>
+                {% if is_sent.append(1) %} {% endif %}
+            {% endif %}
+            {% endfor %}
+            {% if not is_sent %}
+                <a href="{{url_for('addFriend', fromUser=current_user.id, toUser=profile.userid)}}">Add as friend</a>
+            {% endif %}
         {% endif %}
         </div>
         <div class="column">

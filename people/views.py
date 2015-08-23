@@ -10,6 +10,7 @@ from wtforms.widgets import TextArea
 from people.models import User
 from people.models import Profile
 from people.models import Notification
+from people.models import Request
 from flask.ext.login import login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash
 from werkzeug import secure_filename
@@ -110,7 +111,9 @@ def profile(username):
     user.created_at = datetime.datetime.fromtimestamp(user.created_at).strftime('%Y-%m-%d')
     if profile.updated_at is not None:
         profile.updated_at = datetime.datetime.fromtimestamp(profile.updated_at).strftime('%Y-%m-%d %H:%M')
-    return render_template('profile.html', profile=profile, user=user)
+    pendingFriends = Request.query.filter_by(to_user_id=user.id, accepted=False)
+    print(pendingFriends)
+    return render_template('profile.html', profile=profile, user=user, pendingFriends=pendingFriends)
 
 
 @app.route('/<username>/edit', methods=['GET', 'POST'])
@@ -168,6 +171,25 @@ def confirm_email(token):
 @app.route('/inbox')
 def inbox():
     return render_template('notifications.html')
+
+@app.route('/addFriend', methods=['GET'])
+def addFriend():
+    fromUserId = request.args.get('fromUser')
+    toUserId = request.args.get('toUser')
+    fromUser = User.query.filter_by(id=fromUserId).first_or_404()
+    toUser = User.query.filter_by(id=toUserId).first_or_404()
+    if fromUser is not None and toUser is not None:
+        timeStamp = time.time()
+        title = 'New friendrequest'
+        text = 'You have a new friendRequest from ' + fromUser.firstName + ' ' + fromUser.lastName
+        friendRequest = Request(fromUser, toUser)
+        notification = Notification('friendRequest', timeStamp, title, text, fromUser, toUser)
+        db.session.add(notification)
+        db.session.add(friendRequest)
+        db.session.commit()
+        return redirect(url_for('profile', username=toUserId))
+
+
 
 class RegisterForm(Form):
     """docstring for RegisterForm"""
