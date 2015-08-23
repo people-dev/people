@@ -9,7 +9,7 @@ import time
 db.drop_all()
 db.create_all()
 
-ts= time.time()
+ts = time.time()
 
 user = User("00admin", "Admin", "Account", generate_password_hash("plaintextpassword"),ts)
 user.active = True
@@ -17,8 +17,8 @@ user.confirmed_at = ts
 
 profile = Profile("00admin")
 
-notification = Notification(user.id, "Info", ts, "Hello People", "Test notification")
-notification2 = Notification(user.id, "Warning", ts, "Important message!!!", "This is a very important message.")
+notification = Notification("Info", ts, "Hello People", "Test notification", None, user)
+notification2 = Notification("Warning", ts, "Important message!!!", "This is a very important message.", user, user)
 
 db.session.add(user)
 db.session.add(profile)
