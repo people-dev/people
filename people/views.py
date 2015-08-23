@@ -22,7 +22,7 @@ def before_request():
     if not current_user.is_anonymous():
         g.notifications = Notification.query.filter_by(user=current_user.id) 
         for notification in g.notifications:
-            if type(notification.notificationTime) is int:
+            if type(notification.notificationTime) is not str:
                 # temp fix for notification time being converted again on POST from e.g. editProfile 
                 notification.notificationTime = datetime.datetime.fromtimestamp(notification.notificationTime).strftime('%Y-%m-%d')
 

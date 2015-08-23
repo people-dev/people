@@ -18,9 +18,11 @@ user.confirmed_at = ts
 profile = Profile("00admin")
 
 notification = Notification(user.id, "Info", ts, "Hello People", "Test notification")
+notification2 = Notification(user.id, "Warning", ts, "Important message!!!", "This is a very important message.")
 
 db.session.add(user)
 db.session.add(profile)
 db.session.add(notification)
+db.session.add(notification2)
 
 db.session.commit()
