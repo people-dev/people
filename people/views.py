@@ -122,18 +122,18 @@ def editProfile(username):
         # if form.validate_on_submit():
             timeStamp = time.time()
             profile = Profile.query.get(username)
-            profile.name=form.name.data
-            profile.gender=form.gender.data
-            profile.major=form.major.data
-            profile.semester=form.semester.data
-            profile.phone=form.phone.data
-            profile.mobile=form.mobile.data
-            profile.jabber=form.jabber.data
+            profile.name = form.name.data
+            profile.gender = form.gender.data
+            profile.major = form.major.data
+            profile.semester = form.semester.data
+            profile.phone = form.phone.data
+            profile.mobile = form.mobile.data
+            profile.jabber = form.jabber.data
             profile.updated_at = timeStamp
             profile.about = form.about.data
             if form.picture.data.filename is not '':
                 filename = secure_filename(form.picture.data.filename)
-                form.picture.data.save('people'+url_for('static',filename='images/'+filename))
+                form.picture.data.save('people' + url_for('static', filename='images/' + filename))
                 profile.image = filename
             db.session.commit()
             return redirect(url_for('profile', username=current_user.id))
