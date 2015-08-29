@@ -19,10 +19,10 @@
         <h2>Basic Information</h2>
         <div class="ui divider"></div>
         <div class="ui field">
-            {{ form.gender.label }} {{ form.gender(width='100%', size=20, value=profile.gender) }}
+            {{ form.gender.label }} {{ form.gender(width='100%', size=20, value=user.gender) }}
         </div>
         <div class="ui field">
-            {{form.birthday.label}} {{ form.birthday(class='datepicker', value=profile.birthday) }}
+            {{form.birthday.label}} {{ form.birthday(class='datepicker', value=user.birthday) }}
         </div>
         <h2>Education</h2>
         <div class="ui divider"></div>
@@ -30,18 +30,18 @@
             {{ form.major.label }} {{ form.major() }}
         </div>
         <div class="ui field">
-            {{ form.semester.label }} {{ form.semester(size=20, value=profile.semester) }}
+            {{ form.semester.label }} {{ form.semester(size=20, value=user.semester) }}
         </div>
         <h2>Contact Information</h2>
         <div class="ui divider"></div>
         <div class="ui field">
-            {{ form.phone.label }} {{ form.phone(size=20, value=profile.phone) }}
+            {{ form.phone.label }} {{ form.phone(size=20, value=user.phone) }}
         </div>
         <div class="ui field">
-            {{ form.mobile.label }} {{ form.mobile(size=20, value=profile.mobile) }}
+            {{ form.mobile.label }} {{ form.mobile(size=20, value=user.mobile) }}
         </div>
         <div class="ui field">
-            {{ form.jabber.label }} {{ form.jabber(size=20, value=profile.jabber) }}
+            {{ form.jabber.label }} {{ form.jabber(size=20, value=user.jabber) }}
         </div>
         <h2>Additional Information</h2>
         <div class="ui divider"></div>
@@ -50,7 +50,7 @@
         </div>
         <div class="ui buttons right floated">
         <input type="submit" class="ui positive button" value="Save">
-          <a href="{{url_for('profile', username=current_user.id)}}" class="ui negative button">Cancel</a>
+          <a href="{{url_for('user', id=current_user.id)}}" class="ui negative button">Cancel</a>
         </div>
     </form>
  </div> 

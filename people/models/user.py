@@ -4,17 +4,28 @@ from flask.ext.login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 import re
 
+
 class User(db.Model, UserMixin):
     id = db.Column(db.Text, primary_key=True)
     firstName = db.Column(db.String(255))
     lastName = db.Column(db.String(255))
-    email = db.Column(db.String(255), unique=True)
+    email = db.Column(db.String(255), unique = True)
     password = db.Column(db.String(255))
-    active = db.Column(db.Boolean())
+    active = db.Column(db.Boolean(), default = False)
     confirmed_at = db.Column(db.Integer)
     created_at = db.Column(db.Integer)
-
-
+    about = db.Column(db.Text)
+    gender = db.Column(db.Text)
+    image = db.Column(db.Text)
+    major = db.Column(db.Text)
+    semester = db.Column(db.Text)
+    phone = db.Column(db.Text)
+    mobile = db.Column(db.Text)
+    jabber = db.Column(db.Text)
+    street = db.Column(db.Text)
+    zipcode = db.Column(db.Text)
+    city = db.Column(db.Text)
+    updated_at = db.Column(db.Integer, nullable=True)
 
     def __init__(self, id, firstName, lastName, password, created_at):
         self.id = id
@@ -22,7 +33,6 @@ class User(db.Model, UserMixin):
         self.lastName = lastName
         self.email = id + "@informatik.uni-hamburg.de"
         self.password = password
-        self.active = False
         self.confirmed_at = 0
         self.created_at = created_at
 

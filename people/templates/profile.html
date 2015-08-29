@@ -8,8 +8,8 @@
         <div class="column">
             <div class="ui card">
                 <div class="image">
-                {% if profile.image %}
-                    <img class="ui medium bordered image" src="{{url_for('static', filename = 'images/' + profile.image)}}">
+                {% if user.image %}
+                    <img class="ui medium bordered image" src="{{url_for('static', filename = 'images/' + user.image)}}">
                 {% else %}
                     <img class="ui medium bordered image" src="{{url_for('static', filename = 'images/people_p.png')}}">
                 {% endif %}
@@ -21,7 +21,7 @@
                     </div>
                     <div class="description">
                         <strong>About {{user.firstName}}:</strong>
-                        {{profile.about}}
+                        {{user.about}}
                     </div>
                 </div>
                 <div class="extra content">
@@ -42,7 +42,7 @@
             {% endif %}
             {% endfor %}
             {% if not is_sent %}
-                <a href="{{url_for('addFriend', fromUser=current_user.id, toUser=profile.userid)}}">Add as friend</a>
+                <a href="{{url_for('addFriend', fromUser=current_user.id, toUser=user.id)}}">Add as friend</a>
             {% endif %}
         {% endif %}
         </div>
@@ -58,7 +58,7 @@
                     <div class="column">
                         {{user.firstName}} {{user.lastName}} <br>
                         {{user.created_at}} <br>
-                        {{profile.updated_at}} <br>
+                        {{user.updated_at}} <br>
                     </div>
                 </div>
             </div>
@@ -70,8 +70,8 @@
                         Birthday: <br>
                     </div>
                     <div class="column">
-                        {{profile.gender}}<br>
-                        {{profile.birthday}} <br>
+                        {{user.gender}}<br>
+                        {{user.birthday}} <br>
                     </div>
                 </div>
             </div>
@@ -83,8 +83,8 @@
                         Semester: <br>
                     </div>
                     <div class="column">
-                        {{profile.major}}<br>
-                        {{profile.semester}} <br>
+                        {{user.major}}<br>
+                        {{user.semester}} <br>
                     </div>
                 </div>
             </div>
@@ -100,11 +100,11 @@
                     </div>
                     <div class="column">
                         {{user.email}} <br>
-                        {{profile.phone}} <br>
-                        {{profile.mobile}} <br>
-                        {{profile.jabber}} <br>
-                        {{profile.street}} <br>
-                        {{profile.zipcode}} {{profile.city}}
+                        {{user.phone}} <br>
+                        {{user.mobile}} <br>
+                        {{user.jabber}} <br>
+                        {{user.street}} <br>
+                        {{user.zipcode}} {{user.city}}
                     </div>
                 </div>
             </div>

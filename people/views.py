@@ -8,7 +8,6 @@ from wtforms.validators import DataRequired
 from wtforms.fields.html5 import DateField, IntegerRangeField
 from wtforms.widgets import TextArea
 from people.models import User
-from people.models import Profile
 from people.models import Notification
 from people.models import Request
 from flask.ext.login import login_user, login_required, logout_user, current_user
@@ -49,9 +48,7 @@ def register():
         if user.id is False:
             flash('Username not valid', 'error')
             abort(redirect('register'))
-        profile = Profile(form.username.data)
         db.session.add(user)
-        db.session.add(profile)
         db.session.commit()
         # msg = Message('People Confirm account', recipients=['3deinert@informatik.uni-hamburg.de'], html='Your account has been successfully created and this is the confirmation mail')
         # mail.send(msg)
@@ -89,7 +86,7 @@ def login():
         # next = request.args.get('next')
         # if not next_is_valid(next):
         #     return abort(400)
-            return redirect(url_for('profile', username=current_user.id))
+            return redirect(url_for('profile', id=current_user.id))
         else:
             flash('Username or password wrong', 'error')
     return render_template('login.html', form=form)
@@ -100,20 +97,19 @@ def logout():
     logout_user()
     return redirect(url_for('login'))
 
-@app.route('/<username>')
+@app.route('/<id>')
 @login_required
-def profile(username):
-    profile = Profile.query.get(username)
-    user = User.query.get(username)
-    if user is None or profile is None:
+def profile(id):
+    user = User.query.get(id)
+    if user is None:
         abort(404)
 
     user.created_at = datetime.datetime.fromtimestamp(user.created_at).strftime('%Y-%m-%d')
-    if profile.updated_at is not None:
-        profile.updated_at = datetime.datetime.fromtimestamp(profile.updated_at).strftime('%Y-%m-%d %H:%M')
+    if user.updated_at is not None:
+        user.updated_at = datetime.datetime.fromtimestamp(user.updated_at).strftime('%Y-%m-%d %H:%M')
     pendingFriends = Request.query.filter_by(to_user_id=user.id, accepted=False)
     print(pendingFriends)
-    return render_template('profile.html', profile=profile, user=user, pendingFriends=pendingFriends)
+    return render_template('profile.html', user=user, pendingFriends=pendingFriends)
 
 
 @app.route('/<username>/edit', methods=['GET', 'POST'])
@@ -124,29 +120,27 @@ def editProfile(username):
         if request.method == 'POST':
         # if form.validate_on_submit():
             timeStamp = time.time()
-            profile = Profile.query.get(username)
-            profile.name = form.name.data
-            profile.gender = form.gender.data
-            profile.major = form.major.data
-            profile.semester = form.semester.data
-            profile.phone = form.phone.data
-            profile.mobile = form.mobile.data
-            profile.jabber = form.jabber.data
-            profile.updated_at = timeStamp
-            profile.about = form.about.data
+            user = User.query.get(username)
+            user.gender = form.gender.data
+            user.major = form.major.data
+            user.semester = form.semester.data
+            user.phone = form.phone.data
+            user.mobile = form.mobile.data
+            user.jabber = form.jabber.data
+            user.updated_at = timeStamp
+            user.about = form.about.data
             if form.picture.data.filename is not '':
                 filename = secure_filename(form.picture.data.filename)
                 form.picture.data.save('people' + url_for('static', filename='images/' + filename))
-                profile.image = filename
+                user.image = filename
             db.session.commit()
-            return redirect(url_for('profile', username=current_user.id))
-        profile = Profile.query.get(username)
+            return redirect(url_for('profile', id=current_user.id))
         user = User.query.get(username)
-        form.about.data = profile.about
-        if user is None or profile is None:
+        form.about.data = user.about
+        if user is None:
             abort(404)
         filename = None
-        return render_template('editProfile.html', profile=profile, user=user, form=form, filename=filename)
+        return render_template('editProfile.html', user=user, form=form, filename=filename)
     else:
         abort(403)
 
@@ -187,7 +181,7 @@ def addFriend():
         db.session.add(notification)
         db.session.add(friendRequest)
         db.session.commit()
-        return redirect(url_for('profile', username=toUserId))
+        return redirect(url_for('user', id=toUserId))
 
 
 

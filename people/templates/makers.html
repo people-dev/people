@@ -8,7 +8,7 @@
     <img src="{{ url_for('static', filename='images/rafael.jpg') }}">
   </div>
   <div class="content">
-    <a class="header">Rafael Epplee</a>
+    <a class="header" href="{{ url_for('profile', id='12epplee') }}">Rafael Epplee</a>
     <div class="meta">
       <span class="date">Joined in 2014</span>
     </div>
@@ -16,7 +16,7 @@
     </div>
   </div>
   <div class="extra content">
-    <a>
+    <a href="{{ url_for('profile', id='12epplee') }}">
       <i class="user icon"></i>
       His Profile
     </a>
@@ -27,7 +27,7 @@
     <img src="{{ url_for('static', filename='images/people_p.png') }}">
   </div>
   <div class="content">
-    <a class="header">Arne Beer</a>
+    <a class="header" href="{{ url_for('profile', id='12beer') }}">Arne Beer</a>
     <div class="meta">
       <span class="date">Joined in 2014</span>
     </div>
@@ -35,7 +35,7 @@
     </div>
   </div>
   <div class="extra content">
-    <a>
+    <a href="{{ url_for('profile', id='12beer') }}">
       <i class="user icon"></i>
       His Profile
     </a>
@@ -46,7 +46,7 @@
     <img src="{{ url_for('static', filename='images/julian.png') }}">
   </div>
   <div class="content">
-    <a class="header">Julian Deinert</a>
+    <a class="header" href="{{ url_for('profile', id='13deinert') }}">Julian Deinert</a>
     <div class="meta">
       <span class="date">Joined in 2014</span>
     </div>
@@ -54,7 +54,7 @@
     </div>
   </div>
   <div class="extra content">
-    <a href="13deinert">
+    <a href="{{ url_for('profile', id='13deinert') }}">
       <i class="user icon"></i>
       His Profile
     </a>
