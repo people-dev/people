@@ -29,12 +29,16 @@ def before_request():
 
 @app.errorhandler(404)
 def pageNotFound(e):
-    return render_template('404.html'), 404
+    return render_template('error.html', error_code = 404), 404
 
 @app.errorhandler(403)
 def forbidden(e):
-    return render_template('403.html'), 403
+    return render_template('error.html', error_code = 403), 403
 
+@app.errorhandler(401)
+def forbidden(e):
+    return render_template('error.html', error_code = 401), 401
+    
 @app.route('/')
 def index():
     return render_template('index.html')
