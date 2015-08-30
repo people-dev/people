@@ -172,8 +172,9 @@ def confirm_email(token):
 @app.route('/inbox')
 def inbox():
     form = AcceptRequestForm()
+    readForm = ReadNotificationForm()
     notifications = Notification.query.filter_by(to_user=current_user)
-    return render_template('notifications.html', form=form, notifications=notifications)
+    return render_template('notifications.html', form=form, notifications=notifications, readForm=readForm)
 
 @app.route('/addFriend', methods=['POST'])
 def addFriend():
@@ -218,6 +219,16 @@ def acceptRequest():
 
     return redirect(url_for('inbox'))
 
+@app.route('/readNotification', methods=['POST'])
+def readNotification():
+    form = ReadNotificationForm()
+    if form.validate_on_submit:
+        notificationId = form.notificationId.data
+        notification = Notification.query.get(notificationId)
+        notification.read = True
+        db.session.commit()
+    return redirect(url_for('inbox'))
+
 
 class RegisterForm(Form):
     """docstring for RegisterForm"""
@@ -253,6 +264,9 @@ class AcceptRequestForm(Form):
     notificationId = HiddenField('notificationId')
     fromUser = HiddenField('FromUser')
     toUser = HiddenField('ToUser')
+
+class ReadNotificationForm(Form):
+    notificationId = HiddenField('notificationId')
 
 
 

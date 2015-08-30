@@ -25,7 +25,11 @@
                 <input class="ui submit button" type="submit" name="btn" value="Ignore">    
           </form>
         {% else %}
-        <button class="ui small button right floated">Dismiss <i class="icon check"></i></button>
+        <form method="POST" action="/readNotification">
+          {{ readForm.csrf_token }}
+          {{ readForm.notificationId(value=a.id) }}          
+          <button class="ui small button right floated" type="submit">Dismiss <i class="icon check"></i></button>
+        </form>
         {% endif %}
         </div>
       </div>
