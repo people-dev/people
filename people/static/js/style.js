@@ -9,3 +9,6 @@ $('.ui.sticky')
     context: '#context'
   })
 ;
+$('.ui.accordion')
+  .accordion()
+;

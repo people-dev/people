@@ -4,7 +4,7 @@
 {% block body %}
 <div class="ui">
   <h3 class="ui dividing header">Notifications</h3>
-  {% for a in g.notifications %}
+  {% for a in notifications %}
   {% if a.read == false %}
     <div class="ui card">
       <div class="content">
@@ -21,9 +21,11 @@
                   {{ form.notificationId(value=a.id) }}
                   {{ form.toUser(value=current_user.id) }}
                   {{ form.fromUser(value=a.from_user.id) }}
-              <input class="ui submit button" type="submit" value="Accept">    
-              <button class="ui button">Cancel</button>
+                <input class="ui submit button" type="submit" name="btn" value="Accept">    
+                <input class="ui submit button" type="submit" name="btn" value="Ignore">    
           </form>
+        {% else %}
+        <button class="ui small button right floated">Dismiss <i class="icon check"></i></button>
         {% endif %}
         </div>
       </div>
@@ -37,5 +39,44 @@
     </div>
     {% endif %}
   {% endfor %}
+  <div class="ui fluid accordion">
+    <div class="title">
+      <i class="history icon"></i>
+      View older notifications
+    </div>
+    <div class="content">
+      {% for a in notifications %}
+      {% if a.read == true %}
+        <div class="ui card">
+          <div class="content">
+            <div class="header">{{a.title}}</div>
+            <div class="meta">
+              <span class="right floated time">{{a.created_at}}</span>
+              <span class="category">{{a.type}}</span>
+            </div>
+            <div class="description">
+              <p>{{a.text}}</p>
+            {% if a.type == 'friendRequest' %}
+              <form method="POST" action="/acceptRequest">
+                  {{ form.csrf_token }}
+                      {{ form.notificationId(value=a.id) }}
+                      {{ form.toUser(value=current_user.id) }}
+                      {{ form.fromUser(value=a.from_user.id) }}
+                  <input class="ui submit button" type="submit" name="btn" value="Accept">    
+            </form>
+            {% endif %}
+            </div>
+          </div>
+          {% if a.from_user %}
+            <div class="extra content">
+              <div class="right floated author">
+              <img class="ui avatar image" src="{{ url_for('static', filename='images/people_p.png') }}"> {{a.from_user.id}}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+        {% endif %}
+      {% endfor %}
+    </div>
 </div>
 {% endblock %}
