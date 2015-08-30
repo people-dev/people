@@ -5,6 +5,7 @@
 <div class="ui">
   <h3 class="ui dividing header">Notifications</h3>
   {% for a in g.notifications %}
+  {% if a.read == false %}
     <div class="ui card">
       <div class="content">
         <div class="header">{{a.title}}</div>
@@ -14,6 +15,16 @@
         </div>
         <div class="description">
           <p>{{a.text}}</p>
+        {% if a.type == 'friendRequest' %}
+          <form method="POST" action="/acceptRequest">
+              {{ form.csrf_token }}
+                  {{ form.notificationId(value=a.id) }}
+                  {{ form.toUser(value=current_user.id) }}
+                  {{ form.fromUser(value=a.from_user.id) }}
+              <input class="ui submit button" type="submit" value="Accept">    
+              <button class="ui button">Cancel</button>
+          </form>
+        {% endif %}
         </div>
       </div>
       {% if a.from_user %}
@@ -24,6 +35,7 @@
         </div>
       {% endif %}
     </div>
+    {% endif %}
   {% endfor %}
 </div>
 {% endblock %}

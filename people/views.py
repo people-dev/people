@@ -171,7 +171,8 @@ def confirm_email(token):
 
 @app.route('/inbox')
 def inbox():
-    return render_template('notifications.html')
+    form = AcceptRequestForm()
+    return render_template('notifications.html', form=form)
 
 @app.route('/addFriend', methods=['POST'])
 def addFriend():
@@ -184,7 +185,7 @@ def addFriend():
         if fromUser is not None and toUser is not None:
             timeStamp = time.time()
             title = 'New friendrequest'
-            text = 'You have a new friendRequest from ' + fromUser.firstName + ' ' + fromUser.lastName
+            text = 'You have a new friend request from ' + fromUser.firstName + ' ' + fromUser.lastName
             friendRequest = Request(fromUser, toUser)
             notification = Notification('friendRequest', timeStamp, title, text, fromUser, toUser)
             db.session.add(notification)
@@ -192,6 +193,23 @@ def addFriend():
             db.session.commit()
 
     return redirect(url_for('profile', id=toUserId))
+
+@app.route('/acceptRequest', methods=['POST'])
+def acceptRequest():
+    form = AcceptRequestForm()
+    if form.validate_on_submit():
+        to_user_id = form.toUser.data
+        from_user_id = form.fromUser.data
+        notificationId = form.notificationId.data
+        to_user = User.query.get(to_user_id)
+        from_user = User.query.get(from_user_id)
+        request = Request.query.filter_by(to_user = to_user, from_user = from_user).first_or_404()
+        request.accepted = True
+        notification = Notification.query.get(notificationId)
+        notification.read = True
+        db.session.commit()
+
+    return redirect(url_for('inbox'))
 
 
 class RegisterForm(Form):
@@ -223,5 +241,11 @@ class EditProfileForm(Form):
 class AddFriendForm(Form):
     fromUser = HiddenField('FromUser')
     toUser = HiddenField('ToUser')
+
+class AcceptRequestForm(Form):
+    notificationId = HiddenField('notificationId')
+    fromUser = HiddenField('FromUser')
+    toUser = HiddenField('ToUser')
+
 
 
