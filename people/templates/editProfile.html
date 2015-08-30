@@ -15,6 +15,10 @@
         <div class="ui divider"></div>
         <div class="ui field">
             {{ form.name.label }} {{ form.name(value=user.firstName+" "+user.lastName) }}
+            <div class="ui toggle checkbox">
+              <input type="checkbox" name="public">
+              <label>Make visible to public</label>
+            </div>
         </div>
         <h2>Basic Information</h2>
         <div class="ui divider"></div>
@@ -50,7 +54,7 @@
         </div>
         <div class="ui buttons right floated">
         <input type="submit" class="ui positive button" value="Save">
-          <a href="{{url_for('user', id=current_user.id)}}" class="ui negative button">Cancel</a>
+          <a href="{{url_for('profile', id=current_user.id)}}" class="ui negative button">Cancel</a>
         </div>
     </form>
  </div> 

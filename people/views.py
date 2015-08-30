@@ -3,7 +3,7 @@ from flask import render_template, request, redirect, url_for, abort, flash, g
 from flask.ext.uploads import UploadSet, IMAGES
 from flask_wtf import Form
 from flask_wtf.file import FileField, FileAllowed
-from wtforms import StringField, PasswordField, SelectField, DecimalField 
+from wtforms import StringField, PasswordField, SelectField, DecimalField, HiddenField
 from wtforms.validators import DataRequired
 from wtforms.fields.html5 import DateField, IntegerRangeField
 from wtforms.widgets import TextArea
@@ -100,6 +100,7 @@ def logout():
 @app.route('/<id>')
 @login_required
 def profile(id):
+    form = AddFriendForm()
     user = User.query.get(id)
     if user is None:
         abort(404)
@@ -107,9 +108,15 @@ def profile(id):
     user.created_at = datetime.datetime.fromtimestamp(user.created_at).strftime('%Y-%m-%d')
     if user.updated_at is not None:
         user.updated_at = datetime.datetime.fromtimestamp(user.updated_at).strftime('%Y-%m-%d %H:%M')
-    pendingFriends = Request.query.filter_by(to_user_id=user.id, accepted=False)
-    print(pendingFriends)
-    return render_template('profile.html', user=user, pendingFriends=pendingFriends)
+    is_friend = False
+    is_sent = False
+    is_sent_to_user = False
+    is_friend = Request.is_friend(current_user, user)
+    if not is_friend:
+        is_sent = Request.is_sent(current_user, user)
+        if is_sent:
+            is_sent_to_user = Request.is_sent_to_user(current_user, user)
+    return render_template('profile.html', user=user, is_friend=is_friend, is_sent=is_sent, is_sent_to_user=is_sent_to_user, form=form)
 
 
 @app.route('/<username>/edit', methods=['GET', 'POST'])
@@ -166,23 +173,25 @@ def confirm_email(token):
 def inbox():
     return render_template('notifications.html')
 
-@app.route('/addFriend', methods=['GET'])
+@app.route('/addFriend', methods=['POST'])
 def addFriend():
-    fromUserId = request.args.get('fromUser')
-    toUserId = request.args.get('toUser')
-    fromUser = User.query.filter_by(id=fromUserId).first_or_404()
-    toUser = User.query.filter_by(id=toUserId).first_or_404()
-    if fromUser is not None and toUser is not None:
-        timeStamp = time.time()
-        title = 'New friendrequest'
-        text = 'You have a new friendRequest from ' + fromUser.firstName + ' ' + fromUser.lastName
-        friendRequest = Request(fromUser, toUser)
-        notification = Notification('friendRequest', timeStamp, title, text, fromUser, toUser)
-        db.session.add(notification)
-        db.session.add(friendRequest)
-        db.session.commit()
-        return redirect(url_for('user', id=toUserId))
+    form = AddFriendForm()
+    if form.validate_on_submit():
+        fromUserId = form.fromUser.data
+        toUserId = form.toUser.data
+        fromUser = User.query.filter_by(id=fromUserId).first_or_404()
+        toUser = User.query.filter_by(id=toUserId).first_or_404()
+        if fromUser is not None and toUser is not None:
+            timeStamp = time.time()
+            title = 'New friendrequest'
+            text = 'You have a new friendRequest from ' + fromUser.firstName + ' ' + fromUser.lastName
+            friendRequest = Request(fromUser, toUser)
+            notification = Notification('friendRequest', timeStamp, title, text, fromUser, toUser)
+            db.session.add(notification)
+            db.session.add(friendRequest)
+            db.session.commit()
 
+    return redirect(url_for('profile', id=toUserId))
 
 
 class RegisterForm(Form):
@@ -210,5 +219,9 @@ class EditProfileForm(Form):
     about =  StringField('About you', widget=TextArea())
     images = UploadSet('images', IMAGES)
     picture = FileField('Profile Picture', validators=[FileAllowed(images, 'Images only!')])
+
+class AddFriendForm(Form):
+    fromUser = HiddenField('FromUser')
+    toUser = HiddenField('ToUser')
 
 

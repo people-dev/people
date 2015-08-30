@@ -14,5 +14,17 @@ class Request(db.Model):
 		self.from_user = from_user
 		self.to_user = to_user
 
-		def is_accepted(self):
-			return self.accepted
+	def is_accepted(self):
+		return self.accepted
+
+	@classmethod
+	def is_friend(cls, user1, user2):
+		return db.session.query(Request).filter(((cls.from_user == user1) & (cls.to_user == user2) | (cls.from_user == user2) & (cls.to_user == user1)) & (cls.accepted == True)).count()
+
+	@classmethod
+	def is_sent(cls, user1, user2):
+		return db.session.query(Request).filter(((cls.from_user == user1) & (cls.to_user == user2) | (cls.from_user == user2) & (cls.to_user == user1)) & (cls.accepted == False)).count()
+
+	@classmethod	
+	def is_sent_to_user(cls, user1, user2):
+		return db.session.query(Request).filter((cls.from_user == user2) & (cls.to_user == user1) & (cls.accepted == False)).count()

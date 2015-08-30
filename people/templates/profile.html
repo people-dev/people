@@ -34,15 +34,23 @@
         {% if user.id == current_user.id %}
             <a href="{{url_for('editProfile', username=current_user.id)}}">Edit profile</a>
         {% else %}
-            {% set is_sent = [] %}
-            {% for request in pendingFriends %}
-            {% if request.to_user_id == current_user.id or request.from_user_id == current_user.id %}
-                <p>Friendrequest sent</p>
-                {% if is_sent.append(1) %} {% endif %}
-            {% endif %}
-            {% endfor %}
-            {% if not is_sent %}
-                <a href="{{url_for('addFriend', fromUser=current_user.id, toUser=user.id)}}">Add as friend</a>
+            {% if is_friend %}
+            
+            {% else %}
+                {% if is_sent %}
+                    {% if is_sent_to_user %}
+                        <p>This user has already sent you a friend request. <br> <a href="{{ url_for('inbox')}}">Check your notifications.</a></p>
+                    {% else %}
+                        <p>Friend request sent <i class="checkmark icon"></i></p>
+                    {% endif %}
+                {% else %}
+                <form method="POST" action="/addFriend">
+                    {{ form.csrf_token }}
+                        {{ form.fromUser(value=current_user.id) }}
+                        {{ form.toUser(value=user.id) }}
+                    <input class="ui submit button" type="submit" value="Add as Friend">    
+                </form>
+                {% endif %}
             {% endif %}
         {% endif %}
         </div>
