@@ -20,7 +20,7 @@ import datetime
 @app.before_request
 def before_request():
     if not current_user.is_anonymous():
-        g.notifications = Notification.query.filter_by(to_user=current_user) 
+        g.notifications = Notification.query.filter_by(to_user=current_user, read=False) 
         for notification in g.notifications:
             if type(notification.created_at) is not str:
                 # temp fix for notification time being converted again on POST from e.g. editProfile 
@@ -172,7 +172,8 @@ def confirm_email(token):
 @app.route('/inbox')
 def inbox():
     form = AcceptRequestForm()
-    return render_template('notifications.html', form=form)
+    notifications = Notification.query.filter_by(to_user=current_user)
+    return render_template('notifications.html', form=form, notifications=notifications)
 
 @app.route('/addFriend', methods=['POST'])
 def addFriend():
@@ -198,15 +199,21 @@ def addFriend():
 def acceptRequest():
     form = AcceptRequestForm()
     if form.validate_on_submit():
-        to_user_id = form.toUser.data
-        from_user_id = form.fromUser.data
+        button = request.form['btn']
+
         notificationId = form.notificationId.data
-        to_user = User.query.get(to_user_id)
-        from_user = User.query.get(from_user_id)
-        request = Request.query.filter_by(to_user = to_user, from_user = from_user).first_or_404()
-        request.accepted = True
         notification = Notification.query.get(notificationId)
         notification.read = True
+
+        if button == 'Accept':
+            to_user_id = form.toUser.data
+            from_user_id = form.fromUser.data
+            to_user = User.query.get(to_user_id)
+            from_user = User.query.get(from_user_id)
+            friendRequest = Request.query.filter_by(to_user = to_user, from_user = from_user).first_or_404()
+            friendRequest.accepted = True
+            db.session.delete(notification)
+             
         db.session.commit()
 
     return redirect(url_for('inbox'))
