@@ -218,6 +218,13 @@ def acceptRequest():
             friendRequest = Request.query.filter_by(to_user = to_user, from_user = from_user).first_or_404()
             friendRequest.accepted = True
             db.session.delete(notification)
+
+            #send notification to user who was accepted as friend
+            timeStamp = time.time()
+            title = "Your friend request has been accepted"
+            text = to_user.firstName +" "+ to_user.lastName+" accepted your friend request."
+            acceptNotification = Notification('Info', timeStamp, title, text, None, from_user)
+            db.session.add(acceptNotification)
              
         db.session.commit()
 
