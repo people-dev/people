@@ -102,25 +102,30 @@ def logout():
     return redirect(url_for('login'))
 
 @app.route('/<id>')
-@login_required
 def profile(id):
-    form = AddFriendForm()
     user = User.query.get(id)
     if user is None:
         abort(404)
 
-    user.created_at = datetime.datetime.fromtimestamp(user.created_at).strftime('%Y-%m-%d')
-    if user.updated_at is not None:
-        user.updated_at = datetime.datetime.fromtimestamp(user.updated_at).strftime('%Y-%m-%d %H:%M')
-    is_friend = False
-    is_sent = False
     is_sent_to_user = False
-    is_friend = Request.is_friend(current_user, user)
-    if not is_friend:
-        is_sent = Request.is_sent(current_user, user)
-        if is_sent:
-            is_sent_to_user = Request.is_sent_to_user(current_user, user)
-    return render_template('profile.html', user=user, is_friend=is_friend, is_sent=is_sent, is_sent_to_user=is_sent_to_user, form=form)
+    is_sent = False
+    is_friend = False
+    add_friend_form = None
+    if current_user.is_authenticated():
+        add_friend_form = AddFriendForm()
+        is_friend = Request.is_friend(current_user, user)
+        if not is_friend:
+            is_sent = Request.is_sent(current_user, user)
+            if is_sent:
+                is_sent_to_user = Request.is_sent_to_user(current_user, user)
+
+    if not (user.created_at is None):
+        user.created_at = datetime.datetime.fromtimestamp(user.created_at).strftime('%Y-%m-%d')
+    if not (user.updated_at is None):
+        user.updated_at = datetime.datetime.fromtimestamp(user.updated_at).strftime('%Y-%m-%d %H:%M')
+
+    user_data = user.get_attributes_visible_for(current_user)
+    return render_template('profile.html', user=user, user_data=user_data, is_friend=is_friend, is_sent=is_sent, is_sent_to_user=is_sent_to_user, add_friend_form=add_friend_form)
 
 
 @app.route('/<username>/edit', methods=['GET', 'POST'])

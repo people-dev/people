@@ -24,3 +24,4 @@ class Notification(db.Model):
 
 		def is_read(self):
 			return self.read
+

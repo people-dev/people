@@ -1,6 +1,6 @@
 {% extends "layout.html" %}
 {% set activePage = "profile" %}
-{% block title %}Profile of {{user.firstName}} {{user.lastName}}{% endblock %}
+{% block title %}{{user_data.firstName}} {{user_data.lastName}}{% endblock %}
 {% block body %}
 
 <div class="ui grid">
@@ -8,20 +8,20 @@
         <div class="column">
             <div class="ui card">
                 <div class="image">
-                {% if user.image %}
-                    <img class="ui medium bordered image" src="{{url_for('static', filename = 'images/' + user.image)}}">
+                {% if user_data.image %}
+                    <img class="ui medium bordered image" src="{{url_for('static', filename = 'images/' + user_data.image)}}">
                 {% else %}
                     <img class="ui medium bordered image" src="{{url_for('static', filename = 'images/people_p.png')}}">
                 {% endif %}
                 </div>
                 <div class="content">
-                    <a class="header">{{user.firstName}} {{user.lastName}}</a>
+                    <a class="header">{{user_data.firstName}} {{user_data.lastName}}</a>
                     <div class="meta">
                         <span class="date"></span>
                     </div>
                     <div class="description">
-                        <strong>About {{user.firstName}}:</strong>
-                        {{user.about}}
+                        <strong>About {{user_data.firstName}}:</strong>
+                        {{user_data.about}}
                     </div>
                 </div>
                 <div class="extra content">
@@ -33,24 +33,20 @@
             </div>
         {% if user.id == current_user.id %}
             <a href="{{url_for('editProfile', username=current_user.id)}}">Edit profile</a>
-        {% else %}
-            {% if is_friend %}
-            
-            {% else %}
-                {% if is_sent %}
-                    {% if is_sent_to_user %}
-                        <p>This user has already sent you a friend request. <br> <a href="{{ url_for('inbox')}}">Check your notifications.</a></p>
-                    {% else %}
-                        <p>Friend request sent <i class="checkmark icon"></i></p>
-                    {% endif %}
+        {% elif add_friend_form %}
+            {% if is_sent %}
+                {% if is_sent_to_user %}
+                    <p>This user has already sent you a friend request. <br> <a href="{{ url_for('inbox')}}">Check your notifications.</a></p>
                 {% else %}
+                    <p>Friend request sent <i class="checkmark icon"></i></p>
+                {% endif %}
+            {% else %}
                 <form method="POST" action="/addFriend">
-                    {{ form.csrf_token }}
-                        {{ form.fromUser(value=current_user.id) }}
-                        {{ form.toUser(value=user.id) }}
+                    {{ add_friend_form.csrf_token }}
+                        {{ add_friend_form.fromUser(value=current_user.id) }}
+                        {{ add_friend_form.toUser(value=user.id) }}
                     <input class="ui submit button" type="submit" value="Add as Friend">    
                 </form>
-                {% endif %}
             {% endif %}
         {% endif %}
         </div>
@@ -64,9 +60,9 @@
                         Last Update: <br>
                     </div>
                     <div class="column">
-                        {{user.firstName}} {{user.lastName}} <br>
-                        {{user.created_at}} <br>
-                        {{user.updated_at}} <br>
+                        {{user_data.firstName}} {{user_data.lastName}} <br>
+                        {{user_data.created_at}} <br>
+                        {{user_data.updated_at}} <br>
                     </div>
                 </div>
             </div>
@@ -78,8 +74,8 @@
                         Birthday: <br>
                     </div>
                     <div class="column">
-                        {{user.gender}}<br>
-                        {{user.birthday}} <br>
+                        {{user_data.gender}}<br>
+                        {{user_data.birthday}} <br>
                     </div>
                 </div>
             </div>
@@ -91,8 +87,8 @@
                         Semester: <br>
                     </div>
                     <div class="column">
-                        {{user.major}}<br>
-                        {{user.semester}} <br>
+                        {{user_data.major}}<br>
+                        {{user_data.semester}} <br>
                     </div>
                 </div>
             </div>
@@ -107,12 +103,12 @@
                         Address: <br>
                     </div>
                     <div class="column">
-                        {{user.email}} <br>
-                        {{user.phone}} <br>
-                        {{user.mobile}} <br>
-                        {{user.jabber}} <br>
-                        {{user.street}} <br>
-                        {{user.zipcode}} {{user.city}}
+                        {{user_data.email}} <br>
+                        {{user_data.phone}} <br>
+                        {{user_data.mobile}} <br>
+                        {{user_data.jabber}} <br>
+                        {{user_data.street}} <br>
+                        {{user_data.zipcode}} {{user_data.city}}
                     </div>
                 </div>
             </div>

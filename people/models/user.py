@@ -1,4 +1,5 @@
 from people import db 
+from .request import Request
 from sqlalchemy.orm import validates
 from flask.ext.login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -27,6 +28,12 @@ class User(db.Model, UserMixin):
     city = db.Column(db.Text)
     updated_at = db.Column(db.Integer, nullable=True)
 
+    privacy_protected_columns = (
+        'firstName', 'lastName', 'email', 'about', 
+        'gender', 'image', 'major', 'semester',
+        'phone', 'mobile', 'jabber', 'street', 
+        'zipcode', 'city', 'created_at', 'updated_at')
+
     def __init__(self, id, firstName, lastName, password, created_at):
         self.id = id
         self.firstName = firstName
@@ -41,10 +48,18 @@ class User(db.Model, UserMixin):
         try:
             assert re.match("^[0-9]{2}[a-z]{1,7}$", id)
         except Exception as inst:
-            print(inst)
             return False;
         else:
             return id
+
+    def get_attributes_visible_for(self, user):
+        if user.is_authenticated() and Request.is_friend(self, user):
+            return self.as_dict()
+        else:
+            return {column: getattr(self, column) for column in self.privacy_protected_columns if self.get_column_privacy(column) == 'public'}
+
+    def get_column_privacy(self, column):
+        return getattr(self, column+'_privacy')
 
     def is_active(self):
         return self.active
@@ -60,3 +75,6 @@ class User(db.Model, UserMixin):
 
     def check_password(self, password):
         return check_password_hash(self.password, password)
+
+for column in User.privacy_protected_columns:
+    setattr(User, column + '_privacy', db.Column(db.Enum('public', 'friends'), default = 'friends'))
