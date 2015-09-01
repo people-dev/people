@@ -19,6 +19,8 @@ class Request(db.Model):
 
 	@classmethod
 	def is_friend(cls, user1, user2):
+		if user1 == user2: 
+			return True
 		return db.session.query(Request).filter(((cls.from_user == user1) & (cls.to_user == user2) | (cls.from_user == user2) & (cls.to_user == user1)) & (cls.accepted == True)).count()
 
 	@classmethod

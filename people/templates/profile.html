@@ -3,6 +3,23 @@
 {% block title %}{{user_data.firstName}} {{user_data.lastName}}{% endblock %}
 {% block body %}
 
+{% macro display_dict(data) %}
+    <div class="column">
+        {% for key, val in data.items() %}
+            {% if val %}
+                {{key}}:<br/>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div class="column">
+        {% for key, val in data.items() %}
+            {% if val %}
+                {{val}}<br/>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endmacro %}
+
 <div class="ui grid">
     <div class="two column row">
         <div class="column">
@@ -54,62 +71,41 @@
             <h2>Account Information</h2>
             <div class="ui grid">
                 <div class="two column row">
-                    <div class="column">
-                        Name: <br>
-                        Signed up at: <br>
-                        Last Update: <br>
-                    </div>
-                    <div class="column">
-                        {{user_data.firstName}} {{user_data.lastName}} <br>
-                        {{user_data.created_at}} <br>
-                        {{user_data.updated_at}} <br>
-                    </div>
+                    {{ display_dict({
+                        'Name': user_data.full_name,
+                        'Signed up at': user_data.created_at,
+                        'Last Update:': user_data.updated_at
+                    }) }}
                 </div>
             </div>
             <h2>Basic Information</h2>
             <div class="ui grid">
                 <div class="two column row">
-                    <div class="column">
-                        Gender: <br>
-                        Birthday: <br>
-                    </div>
-                    <div class="column">
-                        {{user_data.gender}}<br>
-                        {{user_data.birthday}} <br>
-                    </div>
+                    {{ display_dict({
+                        'Gender': user_data.gender,
+                        'Birthday': user_data.birthday
+                    }) }}
                 </div>
             </div>
             <h2>Education</h2>
             <div class="ui grid">
                 <div class="two column row">
-                    <div class="column">
-                        Major: <br>
-                        Semester: <br>
-                    </div>
-                    <div class="column">
-                        {{user_data.major}}<br>
-                        {{user_data.semester}} <br>
-                    </div>
+                    {{ display_dict({
+                        'Major': user_data.major,
+                        'Semester': user_data.semester
+                    }) }}
                 </div>
             </div>
             <h2>Contact Information</h2>
             <div class="ui grid">
                 <div class="two column row">
-                    <div class="column">
-                        Email: <br>
-                        Phone: <br>
-                        Mobile: <br>
-                        Jabber: <br>
-                        Address: <br>
-                    </div>
-                    <div class="column">
-                        {{user_data.email}} <br>
-                        {{user_data.phone}} <br>
-                        {{user_data.mobile}} <br>
-                        {{user_data.jabber}} <br>
-                        {{user_data.street}} <br>
-                        {{user_data.zipcode}} {{user_data.city}}
-                    </div>
+                    {{ display_dict({
+                        'Email': user_data.email,
+                        'Phone': user_data.phone,
+                        'Mobile': user_data.mobile,
+                        'Jabber': user_data.jabber,
+                        'Address': user_data.address
+                    }) }}
                 </div>
             </div>
         </div>

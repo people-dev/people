@@ -32,7 +32,8 @@ class User(db.Model, UserMixin):
         'firstName', 'lastName', 'email', 'about', 
         'gender', 'image', 'major', 'semester',
         'phone', 'mobile', 'jabber', 'street', 
-        'zipcode', 'city', 'created_at', 'updated_at')
+        'zipcode', 'city', 'created_at', 'updated_at',
+        'full_name')
 
     def __init__(self, id, firstName, lastName, password, created_at):
         self.id = id
@@ -54,12 +55,21 @@ class User(db.Model, UserMixin):
 
     def get_attributes_visible_for(self, user):
         if user.is_authenticated() and Request.is_friend(self, user):
-            return self.as_dict()
+            return self.__dict__
         else:
             return {column: getattr(self, column) for column in self.privacy_protected_columns if self.get_column_privacy(column) == 'public'}
 
     def get_column_privacy(self, column):
         return getattr(self, column+'_privacy')
+
+    @property
+    def full_name(self):
+        return self.firstName + self.lastName
+
+    @property
+    def address(self):
+        return self.street + '\n' + \
+            self.zipcode + self.city
 
     def is_active(self):
         return self.active
