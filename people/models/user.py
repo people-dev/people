@@ -1,4 +1,4 @@
-from people import db 
+from people import db
 from .request import Request
 from sqlalchemy.orm import validates
 from flask.ext.login import UserMixin
@@ -29,9 +29,9 @@ class User(db.Model, UserMixin):
     updated_at = db.Column(db.Integer, nullable=True)
 
     privacy_protected_columns = (
-        'firstName', 'lastName', 'email', 'about', 
+        'firstName', 'lastName', 'email', 'about',
         'gender', 'image', 'major', 'semester',
-        'phone', 'mobile', 'jabber', 'street', 
+        'phone', 'mobile', 'jabber', 'street',
         'zipcode', 'city', 'created_at', 'updated_at',
         'full_name')
 
@@ -54,7 +54,7 @@ class User(db.Model, UserMixin):
             return id
 
     def get_attributes_visible_for(self, user):
-        if user.is_authenticated() and Request.is_friend(self, user):
+        if user.is_authenticated and Request.is_friend(self, user):
             return self.__dict__
         else:
             return {column: getattr(self, column) for column in self.privacy_protected_columns if self.get_column_privacy(column) == 'public'}

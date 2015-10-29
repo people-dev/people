@@ -19,11 +19,11 @@ import datetime
 
 @app.before_request
 def before_request():
-    if not current_user.is_anonymous():
-        g.notifications = Notification.query.filter_by(to_user=current_user, read=False) 
+    if not current_user.is_anonymous:
+        g.notifications = Notification.query.filter_by(to_user=current_user, read=False)
         for notification in g.notifications:
             if type(notification.created_at) is not str:
-                # temp fix for notification time being converted again on POST from e.g. editProfile 
+                # temp fix for notification time being converted again on POST from e.g. editProfile
                 notification.created_at = datetime.datetime.fromtimestamp(notification.created_at).strftime('%Y-%m-%d')
 
 
@@ -38,7 +38,7 @@ def forbidden(e):
 @app.errorhandler(401)
 def forbidden(e):
     return render_template('error.html', error_code = 401), 401
-    
+
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -111,7 +111,7 @@ def profile(id):
     is_sent = False
     is_friend = False
     add_friend_form = None
-    if current_user.is_authenticated():
+    if current_user.is_authenticated:
         add_friend_form = AddFriendForm()
         is_friend = Request.is_friend(current_user, user)
         if not is_friend:
@@ -230,7 +230,7 @@ def acceptRequest():
             text = to_user.firstName +" "+ to_user.lastName+" accepted your friend request."
             acceptNotification = Notification('Info', timeStamp, title, text, None, from_user)
             db.session.add(acceptNotification)
-             
+
         db.session.commit()
 
     return redirect(url_for('inbox'))
@@ -252,7 +252,7 @@ class RegisterForm(Form):
     lastName = StringField('Last Name', validators=[DataRequired()])
     username = StringField('Label', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
-        
+
 
 class LoginForm(Form):
     username = StringField('Username', validators=[DataRequired()])

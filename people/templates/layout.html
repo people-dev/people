@@ -21,14 +21,14 @@
     <div class="ui page grid">
     <div class="sixteen wide column">
     <h1>People</h1>
-    {% if not current_user.is_authenticated() %}
+    {% if not current_user.is_authenticated %}
     <p>Get a profile.</p>
     {% endif %}
       <div class="ui secondary pointing menu">
         <a class="{% if activePage == 'index'  %} active {% endif %} item" href="{{ url_for('index') }}">
           <i class="home icon"></i> Home
         </a>
-        {% if not current_user.is_authenticated() %}
+        {% if not current_user.is_authenticated %}
         <a class="{% if activePage == 'register' %} active {% endif %} item" href="{{ url_for('register') }}">
           <i class="user icon"></i> Register
         </a>
@@ -37,7 +37,7 @@
           <i class="user icon"></i> {{current_user.firstName}}'s Profile
         </a>
         {% endif %}
-        {% if activePage == 'makers' %}        
+        {% if activePage == 'makers' %}
         <a class="active item" href="{{ url_for('makers') }}">
           <i class="user icon"></i> Makers
         </a>
@@ -49,9 +49,9 @@
               <i class="search link icon"></i>
             </div>
           </div>
-          {% if not current_user.is_authenticated() %}
+          {% if not current_user.is_authenticated %}
           <a class="{% if activePage == 'login' %} active {% endif %} item" href="{{ url_for('login') }}">
-           <i class="user icon"></i> Login 
+           <i class="user icon"></i> Login
           </a>
           {% else %}
           <a class="ui {% if g.notifications.count() > 0%}green {% endif %} label" href="{{url_for('inbox')}}">
@@ -65,7 +65,7 @@
               <a class="item" href="{{ url_for('logout') }}">Logout</a>
             </div>
           </div>
-          
+
           {% endif %}
         </div>
       </div>
