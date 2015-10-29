@@ -15,17 +15,6 @@ from werkzeug.security import generate_password_hash
 from werkzeug import secure_filename
 from flask_mail import Message
 import time
-import datetime
-
-@app.before_request
-def before_request():
-    if not current_user.is_anonymous:
-        g.notifications = Notification.query.filter_by(to_user=current_user, read=False)
-        for notification in g.notifications:
-            if type(notification.created_at) is not str:
-                # temp fix for notification time being converted again on POST from e.g. editProfile
-                notification.created_at = datetime.datetime.fromtimestamp(notification.created_at).strftime('%Y-%m-%d')
-
 
 @app.errorhandler(404)
 def pageNotFound(e):

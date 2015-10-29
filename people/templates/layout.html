@@ -54,8 +54,8 @@
            <i class="user icon"></i> Login
           </a>
           {% else %}
-          <a class="ui {% if g.notifications.count() > 0%}green {% endif %} label" href="{{url_for('inbox')}}">
-            <i class="mail icon"></i> {{ g.notifications.count() }}
+          <a class="ui {% if current_user.notifications.count() > 0%}green {% endif %} label" href="{{url_for('inbox')}}">
+            <i class="mail icon"></i> {{ current_user.notifications.count() }}
           </a>
           <div class="ui dropdown item">
             {{ current_user.firstName }} {{ current_user.lastName }}

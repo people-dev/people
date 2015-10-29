@@ -1,9 +1,10 @@
 from people import db
+from .notification import Notification
 from .request import Request
 from sqlalchemy.orm import validates
 from flask.ext.login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-import re
+import re, datetime
 
 
 class User(db.Model, UserMixin):
@@ -70,6 +71,16 @@ class User(db.Model, UserMixin):
     def address(self):
         return self.street + '\n' + \
             self.zipcode + self.city
+
+    @property
+    def notifications(self):
+        notifications = Notification.query.filter_by(to_user=self, read=False)
+        for notification in notifications:
+            if type(notification.created_at) is not str:
+                # temp fix for notification time being converted again on POST from e.g. editProfile
+                notification.created_at = \
+                    datetime.datetime.fromtimestamp(notification.created_at).strftime('%Y-%m-%d')
+        return notifications
 
     def is_active(self):
         return self.active
